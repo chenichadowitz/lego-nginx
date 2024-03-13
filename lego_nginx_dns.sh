@@ -18,9 +18,8 @@ if [[ ! -f /etc/nginx/ssl/${DOMAIN}/${DOMAIN}.crt || ${exit_code} -ne 0 ]]; then
   fi
 fi
 
-
-
 $(while :; do sleep "${RENEW_INTERVAL:-12h}" && /opt/lego ${lego_renew}; done;) &
 
+nginx -g "daemon off;" &
 
-nginx -g "daemon off;"
+tail -qF /var/log/nginx/access.log /var/log/nginx/error.log

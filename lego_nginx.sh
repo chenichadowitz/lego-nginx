@@ -7,7 +7,7 @@ fi
 
 if [[ ! -f /etc/nginx/ssl/${DOMAIN}/${DOMAIN}.crt ]]; then
   mkdir -p /etc/nginx/ssl/${DOMAIN}
-  /opt/lego run -d ${DOMAIN} --email ${EMAIL} --accept-tos --tls --tls.port :${LEGO_TLS_PORT} --run-hook "./install_certs.sh && nginx -t"
+  /opt/lego --email ${EMAIL} --accept-tos run -d ${DOMAIN} --tls --tls.port :${LEGO_TLS_PORT} --run-hook "./install_certs.sh && nginx -t"
   if [[ "$?" != "0" ]]; then
     exit 2;
   fi

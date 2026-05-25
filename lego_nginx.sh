@@ -7,7 +7,7 @@ fi
 
 if [[ ! -f /etc/nginx/ssl/${DOMAIN}/${DOMAIN}.crt ]]; then
   mkdir -p /etc/nginx/ssl/${DOMAIN}
-  /opt/lego run -d ${DOMAIN} --tls --tls.port :${LEGO_TLS_PORT} --email ${EMAIL} --accept-tos --run-hook "./install_certs.sh && nginx -t"
+  /opt/lego run -d ${DOMAIN} --tls --tls.port :${LEGO_TLS_PORT} --email ${EMAIL} --accept-tos --deploy-hook "./install_certs.sh && nginx -t"
   if [[ "$?" != "0" ]]; then
     exit 2;
   fi
@@ -15,7 +15,7 @@ fi
 
 
 
-$(while :; do /opt/lego renew -d ${DOMAIN} --email ${EMAIL} --tls --tls.port :${LEGO_TLS_PORT} --days 45 --renew-hook "./install_certs.sh && nginx -t && nginx -s reload"; sleep "${RENEW_INTERVAL:-12h}"; done;) &
+$(while :; do /opt/lego run -d ${DOMAIN} --email ${EMAIL} --tls --tls.port :${LEGO_TLS_PORT} --days 45 --deploy-hook "./install_certs.sh && nginx -t && nginx -s reload"; sleep "${RENEW_INTERVAL:-12h}"; done;) &
 
 
 nginx -g "daemon off;"

@@ -5,16 +5,14 @@ if [[ -z "${DOMAIN}" || -z "${EMAIL}" ]]; then
   exit 1;
 fi
 
-lego_renew="renew --dns cloudflare --domains \"${DOMAIN}\" --domains \"*.${DOMAIN}\" --email \"${EMAIL}\" --days 45 --renew-hook \"/opt/install_certs.sh\""   
-echo "running: /opt/lego ${lego_renew}"
+lego_renew="run --dns cloudflare --domains \"${DOMAIN}\" --domains \"*.${DOMAIN}\" --email \"${EMAIL}\" --renew-days 45 --deploy-hook \"/opt/install_certs.sh\""   
 /opt/lego ${lego_renew}
 exit_code=$?
 echo "exit code ${exit_code}"
 
 if [[ ! -f /etc/nginx/ssl/${DOMAIN}/${DOMAIN}.crt || ${exit_code} -ne 0 ]]; then
   mkdir -p /etc/nginx/ssl/${DOMAIN}
-  echo "running first time install"
-  /opt/lego run --dns cloudflare --domains "${DOMAIN}" --domains "*.${DOMAIN}" --email "${EMAIL}" --accept-tos --run-hook "/opt/first_time_install_certs.sh"                                                                
+  /opt/lego run --dns cloudflare --domains "${DOMAIN}" --domains "*.${DOMAIN}" --email "${EMAIL}" --accept-tos --deploy-hook "/opt/first_time_install_certs.sh"                                                                
   if [[ "$?" != "0" ]]; then
     exit 2;
   fi

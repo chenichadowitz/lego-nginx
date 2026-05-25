@@ -15,7 +15,7 @@ fi
 
 
 
-$(while :; do /opt/lego run -d ${DOMAIN} --email ${EMAIL} --tls --tls.port :${LEGO_TLS_PORT} --days 45 --deploy-hook "./install_certs.sh && nginx -t && nginx -s reload"; sleep "${RENEW_INTERVAL:-12h}"; done;) &
+$(while :; do /opt/lego run -d ${DOMAIN} --email ${EMAIL} --tls --tls.port :${LEGO_TLS_PORT} --renew-days 45 --deploy-hook "./install_certs.sh && nginx -t && nginx -s reload"; sleep "${RENEW_INTERVAL:-12h}"; done;) &
 
 
 nginx -g "daemon off;"

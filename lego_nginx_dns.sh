@@ -5,7 +5,7 @@ if [[ -z "${DOMAIN}" || -z "${EMAIL}" ]]; then
   exit 1;
 fi
 
-lego_renew="run --dns cloudflare --domains=${DOMAIN} --domains=*.${DOMAIN} --email=${EMAIL} --renew-days 45 --deploy-hook \"/opt/install_certs.sh\""   
+lego_renew="run --dns cloudflare --domains=${DOMAIN} --domains=*.${DOMAIN} --email=${EMAIL} --renew-days 45 --deploy-hook '/opt/install_certs.sh'"   
 /opt/lego ${lego_renew}
 exit_code=$?
 echo "exit code ${exit_code}"
